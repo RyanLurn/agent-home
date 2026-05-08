@@ -6,7 +6,7 @@ import * as agentTables from "@/schema/tables/agent";
 
 const envVars = createEnv({
   server: {
-    SQLITE_FILE_PATH: z.url(),
+    SQLITE_FILE_PATH: z.string().min(1),
   },
   runtimeEnv: process.env,
 });
