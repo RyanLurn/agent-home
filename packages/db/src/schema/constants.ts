@@ -1,0 +1,2 @@
+export const AGENT_CONTEXT_ENTRY_AUTHORS = ["system", "agent"] as const;
+export const AGENT_NOTIFICATION_STATUSES = ["pending", "acknowledged"] as const;
