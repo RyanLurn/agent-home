@@ -9,3 +9,13 @@ export const contextEntryTable = sqliteTable("context_entries", {
   content: text("content").notNull(),
   ...timestampsWithDelete,
 });
+
+export const notificationTable = sqliteTable("notifications", {
+  id,
+  source: text("source").notNull(),
+  content: text("content").notNull(),
+  status: text("status", { enum: ["pending", "acknowledged"] })
+    .notNull()
+    .default("pending"),
+  ...timestampsWithDelete,
+});
