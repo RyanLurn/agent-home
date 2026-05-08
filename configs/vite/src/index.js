@@ -1,0 +1,20 @@
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import babel from "@rolldown/plugin-babel";
+import { defineConfig } from "vite";
+
+export const webAppConfig = defineConfig({
+  plugins: [
+    // Make sure that '@tanstack/react-start/plugin/vite' is passed before '@vitejs/plugin-react'
+    tanstackStart({
+      router: {
+        quoteStyle: "double",
+        semicolons: true,
+      },
+    }),
+    babel({ presets: [reactCompilerPreset()] }),
+    react(),
+    tailwindcss(),
+  ],
+});

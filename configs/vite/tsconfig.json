@@ -1,0 +1,7 @@
+{
+  "extends": "@repo/typescript-config/src/base.json",
+  "compilerOptions": {
+    "checkJs": true
+  },
+  "include": ["src/**/*", "eslint.config.js"]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "agent-home",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev:home": "bun --elide-lines 0 --filter @repo/home dev",
+    "dev:web": "bun --elide-lines 0 --filter @repo/web dev",
+    "build": "turbo run build",
+    "check-types": "turbo run check-types",
+    "lint": "turbo run lint",
+    "format": "prettier . --write --cache",
+    "format:check": "prettier . --check --cache",
+    "check": "turbo run check-types lint && bun run format:check",
+    "ui:add": "bun --elide-lines 0 --filter @repo/ui shadcn:add",
+    "grab": "bun run scripts/grab/src/index.ts"
+  },
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "configs/*",
+      "packages/*",
+      "scripts/*"
+    ],
+    "catalog": {
+      "@clack/prompts": "^1.3.0",
+      "@t3-oss/env-core": "^0.13.11",
+      "@tanstack/react-router": "^1.169.1",
+      "@tanstack/react-start": "^1.167.62",
+      "@types/bun": "^1.3.13",
+      "@types/node": "^25.6.0",
+      "@types/react": "^19.2.14",
+      "@types/react-dom": "^19.2.3",
+      "eslint": "^10.3.0",
+      "jsonc-parser": "^3.3.1",
+      "lucide-react": "^1.14.0",
+      "react": "^19.2.5",
+      "react-dom": "^19.2.5",
+      "tailwindcss": "^4.2.4",
+      "tsdown": "^0.21.10",
+      "typescript": "^6.0.3",
+      "vite": "^8.0.10",
+      "zod": "^4.4.3"
+    }
+  },
+  "devDependencies": {
+    "prettier": "3.8.3",
+    "prettier-plugin-tailwindcss": "0.8.0",
+    "turbo": "^2.9.9"
+  },
+  "packageManager": "bun@1.3.13"
+}

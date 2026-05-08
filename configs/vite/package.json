@@ -1,0 +1,29 @@
+{
+  "name": "@repo/vite-config",
+  "type": "module",
+  "private": "true",
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "lint": "eslint --cache"
+  },
+  "exports": {
+    "import": "./src/index.js",
+    "types": "./src/index.d.ts"
+  },
+  "peerDependencies": {
+    "@tanstack/react-start": "catalog:"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@rolldown/plugin-babel": "^0.2.3",
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/babel__core": "^7.20.5",
+    "@vitejs/plugin-react": "^6.0.1",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

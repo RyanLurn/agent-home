@@ -1,0 +1,22 @@
+{
+  "name": "@repo/grab",
+  "type": "module",
+  "private": "true",
+  "scripts": {
+    "try": "bun run src/try.ts",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint --cache"
+  },
+  "dependencies": {
+    "@clack/prompts": "catalog:",
+    "jsonc-parser": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/bun": "catalog:",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  }
+}
