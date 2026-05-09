@@ -5,6 +5,7 @@
       "dependsOn": ["^build"],
       "inputs": [
         "$TURBO_DEFAULT$",
+        "!**/*.test.{ts,tsx}",
         "!migrations/**",
         "!eslint.config.js",
         "!drizzle.config.ts",
