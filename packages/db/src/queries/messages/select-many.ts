@@ -1,4 +1,4 @@
-import { desc, asc, and, lt, gt, or, eq } from "drizzle-orm";
+import { isNull, desc, asc, and, lt, gt, or, eq } from "drizzle-orm";
 
 import type { SelectedMessage } from "@/types";
 
@@ -18,19 +18,22 @@ export async function selectManyMessages({
     .select()
     .from(messageTable)
     .where(
-      cursor
-        ? or(
-            order === "desc"
-              ? lt(messageTable.createdAt, cursor.createdAt)
-              : gt(messageTable.createdAt, cursor.createdAt),
-            and(
-              eq(messageTable.createdAt, cursor.createdAt),
+      and(
+        isNull(messageTable.deletedAt),
+        cursor
+          ? or(
               order === "desc"
-                ? lt(messageTable.id, cursor.id)
-                : gt(messageTable.id, cursor.id)
+                ? lt(messageTable.createdAt, cursor.createdAt)
+                : gt(messageTable.createdAt, cursor.createdAt),
+              and(
+                eq(messageTable.createdAt, cursor.createdAt),
+                order === "desc"
+                  ? lt(messageTable.id, cursor.id)
+                  : gt(messageTable.id, cursor.id)
+              )
             )
-          )
-        : undefined
+          : undefined
+      )
     )
     .limit(pageSize + 1)
     .orderBy(
