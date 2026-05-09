@@ -6,32 +6,34 @@ import {
 } from "@repo/core/error/create-fallback";
 import { SQLiteError } from "bun:sqlite";
 
-import type { InsertedMessage, SelectedMessage } from "@/types";
+import type { InsertedMessage, SelectedMessage, Message } from "@/types";
 
 import { messageTable } from "@/schema/tables/message";
 import { db } from "@/index";
 
-export async function insertOneMessage(
-  message: InsertedMessage
-): Promise<Result<SelectedMessage, FallBackError | SQLiteError>> {
+export async function insertOneMessage({
+  sender,
+  content,
+}: Pick<InsertedMessage, "content" | "sender">): Promise<
+  Result<Message, FallBackError | SQLiteError>
+> {
   const startContext = {
-    inputs: message,
+    inputs: { sender, content },
     processName: "insertOneMessage",
   };
 
   try {
     const [returnedMessage] = await db
       .insert(messageTable)
-      .values(message)
+      .values({ sender, content })
       .returning();
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { deletedAt, ...message } = returnedMessage as SelectedMessage; // returnedMessage should never be undefined. Type assertion exists to make TypeScript happy.
 
     return {
       success: true,
-      /**
-       * returnedMessage should never be undefined.
-       * Type assertion exists to make TypeScript happy.
-       */
-      data: returnedMessage as SelectedMessage,
+      data: message,
     };
   } catch (error) {
     if (error instanceof SQLiteError) {
