@@ -7,8 +7,8 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint --cache",
     "test": "bun test",
-    "generate": "bun --env-file=.env.local run drizzle-kit generate",
-    "migrate": "bun --env-file=.env.local run drizzle-kit migrate"
+    "generate": "bun run --bun drizzle-kit generate",
+    "migrate": "bun run --bun drizzle-kit migrate"
   },
   "exports": {
     ".": {

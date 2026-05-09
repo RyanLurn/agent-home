@@ -12,7 +12,9 @@
     "format:check": "prettier . --check --cache",
     "check": "turbo run check-types lint && bun run format:check",
     "ui:add": "bun --elide-lines 0 --filter @repo/ui shadcn:add",
-    "grab": "bun run scripts/grab/src/index.ts"
+    "grab": "bun run scripts/grab/src/index.ts",
+    "db:generate": "bun --elide-lines 0 --filter @repo/db generate",
+    "db:migrate": "bun --elide-lines 0 --filter @repo/db migrate"
   },
   "workspaces": {
     "packages": [
