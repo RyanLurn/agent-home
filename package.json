@@ -14,7 +14,8 @@
     "ui:add": "bun --elide-lines 0 --filter @repo/ui shadcn:add",
     "grab": "bun run scripts/grab/src/index.ts",
     "db:generate": "bun --elide-lines 0 --filter @repo/db generate",
-    "db:migrate": "bun --elide-lines 0 --filter @repo/db migrate"
+    "db:migrate": "bun --elide-lines 0 --filter @repo/db migrate",
+    "db:studio": "bun --elide-lines 0 --filter @repo/db studio"
   },
   "workspaces": {
     "packages": [
