@@ -1,35 +1,35 @@
 import { afterAll, expect, test } from "bun:test";
-import { SQLiteError } from "bun:sqlite";
 import { eq } from "drizzle-orm";
 
 import { insertOneMessage } from "@/queries/messages/insert-one";
 import { messageTable } from "@/schema/tables/message";
 import { db } from "@/index";
 
-const testMessageId = crypto.randomUUID();
+let testMessageId: string;
 
 test("should insert 1 message", async () => {
-  const insertResult = await insertOneMessage({
-    id: testMessageId,
-    sender: "agent",
-    content: "Good morning, user.",
-  });
-  expect(insertResult).toBeDefined();
-});
+  expect.hasAssertions();
 
-test("should throw error on duplicate primary key", async () => {
-  expect.assertions(1);
+  const sender = "agent";
+  const content = "Good morning, user.";
 
-  try {
-    await insertOneMessage({
-      id: testMessageId,
-      sender: "user",
-      content: "Good morning, agent.",
-    });
-  } catch (error) {
-    if (error instanceof SQLiteError) {
-      expect(error.code).toBe("SQLITE_CONSTRAINT_PRIMARYKEY");
-    }
+  const insertResult = await insertOneMessage({ sender, content });
+
+  if (insertResult.success) {
+    const message = insertResult.data;
+
+    expect(typeof message.id).toBe("string");
+    expect(message.id).toBeTruthy();
+
+    expect(message.createdAt).toBeInstanceOf(Date);
+    expect(message.updatedAt).toBeInstanceOf(Date);
+
+    expect(message).not.toContainAllKeys(["deletedAt"]);
+
+    expect(message).toHaveProperty("sender", sender);
+    expect(message).toHaveProperty("content", content);
+
+    testMessageId = message.id;
   }
 });
 
