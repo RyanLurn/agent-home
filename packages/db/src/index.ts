@@ -3,6 +3,7 @@ import { createEnv } from "@t3-oss/env-core";
 import { join } from "node:path";
 import { z } from "zod";
 
+import { messageTable } from "@/schema/tables/message";
 import * as agentTables from "@/schema/tables/agent";
 
 export const dbEnvVars = createEnv({
@@ -22,5 +23,5 @@ export const dbEnvVars = createEnv({
 });
 
 export const db = drizzle(dbEnvVars.SQLITE_FILE_PATH, {
-  schema: { ...agentTables },
+  schema: { ...agentTables, messageTable },
 });
