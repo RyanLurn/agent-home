@@ -46,3 +46,6 @@ try.js
 try.ts
 *.try.js
 *.try.ts
+
+# SQLite
+*.sqlite
