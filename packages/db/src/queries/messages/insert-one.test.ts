@@ -1,4 +1,5 @@
 import { afterAll, expect, test } from "bun:test";
+import { SQLiteError } from "bun:sqlite";
 import { eq } from "drizzle-orm";
 
 import { insertOneMessage } from "@/queries/messages/insert-one";
@@ -14,6 +15,22 @@ test("should insert 1 message", async () => {
     content: "Good morning, user.",
   });
   expect(insertResult).toBeDefined();
+});
+
+test("should throw error on duplicate primary key", async () => {
+  expect.assertions(1);
+
+  try {
+    await insertOneMessage({
+      id: testMessageId,
+      sender: "user",
+      content: "Good morning, agent.",
+    });
+  } catch (error) {
+    if (error instanceof SQLiteError) {
+      expect(error.code).toBe("SQLITE_CONSTRAINT_PRIMARYKEY");
+    }
+  }
 });
 
 afterAll(async () => {
