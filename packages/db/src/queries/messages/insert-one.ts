@@ -46,8 +46,7 @@ export async function insertOneMessage({
     return {
       success: false,
       error: createFallbackError({
-        message:
-          "Failed to insert message into the database due to an unexpected error",
+        message: "Failed to insert message due to an unexpected error",
         context: startContext,
         cause: error,
       }),
