@@ -14,7 +14,7 @@ export async function selectManyMessages({
   order?: "desc" | "asc";
   pageSize?: number;
 }) {
-  const selectResults = await db
+  const rows = await db
     .select()
     .from(messageTable)
     .where(
@@ -32,12 +32,29 @@ export async function selectManyMessages({
           )
         : undefined
     )
-    .limit(pageSize)
+    .limit(pageSize + 1)
     .orderBy(
       order === "desc"
         ? desc(messageTable.createdAt)
         : asc(messageTable.createdAt)
     );
 
-  return selectResults;
+  const hasMore = rows.length > pageSize;
+  const data = hasMore ? rows.slice(0, -1) : rows;
+  const nextRow = hasMore ? data[data.length - 1] : undefined;
+  const nextCursor = nextRow
+    ? { id: nextRow.id, createdAt: nextRow.createdAt }
+    : null;
+
+  return {
+    data,
+    metadata: {
+      pagination: {
+        order,
+        pageSize,
+        nextCursor,
+        hasMore,
+      },
+    },
+  };
 }
