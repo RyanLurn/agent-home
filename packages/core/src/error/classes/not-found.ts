@@ -1,3 +1,4 @@
+import { capitalizeFirstLetter } from "@/utils/capitalize-first-letter";
 import { BaseError } from "@/error/classes/base";
 
 type NotFoundContext<TResource extends string> = {
@@ -20,7 +21,8 @@ export class NotFoundError<TResource extends string> extends BaseError<
     super({
       name: "NotFoundError",
       code: "NOT_FOUND_ERROR",
-      message: message ?? `${context.resource} not found`,
+      message:
+        message ?? `${capitalizeFirstLetter(context.resource)} not found`,
       context,
       cause: null,
     });
