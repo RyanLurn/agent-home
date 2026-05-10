@@ -15,9 +15,10 @@ import { db } from "@/index";
 export async function insertOneMessage({
   sender,
   content,
-}: Pick<InsertedMessage, "content" | "sender">): Promise<
-  Result<MessageDTO, FallBackError | SQLiteError>
-> {
+}: {
+  sender: InsertedMessage["sender"];
+  content: InsertedMessage["content"];
+}): Promise<Result<MessageDTO, FallBackError | SQLiteError>> {
   const startContext = {
     inputs: { sender, content },
     processName: "insertOneMessage",
