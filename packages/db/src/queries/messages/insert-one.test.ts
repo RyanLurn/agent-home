@@ -34,5 +34,11 @@ test("should insert 1 message", async () => {
 });
 
 afterAll(async () => {
-  await db.delete(messageTable).where(eq(messageTable.id, testMessageId));
+  try {
+    await db.delete(messageTable).where(eq(messageTable.id, testMessageId));
+  } catch (error) {
+    console.error("insertOneMessage function's test cleanup failed:");
+    console.error(error);
+    throw error;
+  }
 });
