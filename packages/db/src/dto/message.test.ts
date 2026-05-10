@@ -1,62 +1,94 @@
-import { beforeAll, afterAll, expect, test } from "bun:test";
-import { eq } from "drizzle-orm";
+import { expectTypeOf, describe, expect, test } from "bun:test";
 import { z } from "zod";
 
-import { createMessageDTO, type MessageDTO } from "@/dto/message";
-import { messageTable } from "@/schema/tables/message";
-import { db } from "@/index";
+import type { SelectedMessage } from "@/types";
 
-let messageDTO: MessageDTO;
+import {
+  createMessageDTO,
+  MessageDTOSchema,
+  type MessageDTO,
+} from "@/dto/message";
 
-beforeAll(async () => {
-  try {
-    const [returnedMessage] = await db
-      .insert(messageTable)
-      .values({
-        sender: "user",
-        content: "Hi, agent!",
-      })
-      .returning();
+const testMessage: SelectedMessage = {
+  id: crypto.randomUUID(),
+  sender: "user",
+  content: "Hi, agent.",
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  deletedAt: null,
+};
 
-    if (!returnedMessage) {
-      throw new Error("Failed to insert test message");
-    }
+describe("MessageDTOSchema should fail to validate SelectedMessage because", () => {
+  const validationResult = MessageDTOSchema.safeParse(testMessage, {
+    reportInput: true,
+  });
+  expect(validationResult.success).toBeFalse();
 
-    messageDTO = createMessageDTO(returnedMessage);
-  } catch (error) {
-    console.error("Message DTO's test setup failed:");
-    console.error(error);
-    throw error;
+  if (!validationResult.success) {
+    const issues = validationResult.error.issues;
+
+    test("it has 3 validation issues", () => {
+      expect(validationResult.error.issues).toHaveLength(3);
+    });
+
+    const extraKey: keyof SelectedMessage = "deletedAt";
+    test(`it has an extra key of ${extraKey}`, () => {
+      expect.hasAssertions();
+
+      const deletedAtExtraKeyIssue = issues.find(
+        (issue) => issue.code === "unrecognized_keys"
+      );
+
+      if (deletedAtExtraKeyIssue) {
+        expect(deletedAtExtraKeyIssue.keys).toHaveLength(1);
+        expect(deletedAtExtraKeyIssue.keys[0]).toBe(extraKey);
+      }
+    });
+
+    const createdAtKey: keyof SelectedMessage = "createdAt";
+    test(`its ${createdAtKey} property is an instnace of Date, not a string`, () => {
+      expect.hasAssertions();
+
+      const createdAtIssue = issues.find(
+        (issue) => issue.path.length === 1 && issue.path[0] === createdAtKey
+      );
+
+      if (createdAtIssue && createdAtIssue.code === "invalid_type") {
+        expect(createdAtIssue.expected).toBe("string");
+        expect(createdAtIssue.input).toBeInstanceOf(Date);
+      }
+    });
+
+    const updatedAtKey: keyof SelectedMessage = "updatedAt";
+    test(`its ${updatedAtKey} property is an instnace of Date, not a string`, () => {
+      expect.hasAssertions();
+
+      const updatedAtIssue = issues.find(
+        (issue) => issue.path.length === 1 && issue.path[0] === updatedAtKey
+      );
+
+      if (updatedAtIssue && updatedAtIssue.code === "invalid_type") {
+        expect(updatedAtIssue.expected).toBe("string");
+        expect(updatedAtIssue.input).toBeInstanceOf(Date);
+      }
+    });
   }
 });
 
-test("Message DTO should be JSON-serializable", () => {
-  const validationResult = z.json().safeParse(messageDTO);
-  expect(validationResult.success).toBeTrue();
-});
+describe("createMessageDTO function", () => {
+  const messageDTO = createMessageDTO(testMessage);
 
-test("Message DTO should NOT contain deletedAt key", () => {
-  expect(messageDTO).not.toContainAllKeys(["deletedAt"]);
-});
+  test("should return a valid message DTO", () => {
+    const validationResult = MessageDTOSchema.safeParse(messageDTO);
+    expect(validationResult.success).toBeTrue();
+  });
 
-test("Message DTO's createdAt and updatedAt properties should have values following the ISO 8601 format", () => {
-  const createdAtValidationResult = z.iso
-    .datetime()
-    .safeParse(messageDTO.createdAt);
-  expect(createdAtValidationResult.success).toBeTrue();
+  test("should return a JSON-serializable value", () => {
+    const validationResult = z.json().safeParse(messageDTO);
+    expect(validationResult.success).toBeTrue();
+  });
 
-  const updatedAtValidationResult = z.iso
-    .datetime()
-    .safeParse(messageDTO.updatedAt);
-  expect(updatedAtValidationResult.success).toBeTrue();
-});
-
-afterAll(async () => {
-  try {
-    await db.delete(messageTable).where(eq(messageTable.id, messageDTO.id));
-  } catch (error) {
-    console.error("Message DTO's test cleanup failed:");
-    console.error(error);
-    throw error;
-  }
+  // Type testing. These functions are no-ops at runtime.
+  expectTypeOf(createMessageDTO).parameters.toEqualTypeOf<[SelectedMessage]>();
+  expectTypeOf(createMessageDTO).returns.toEqualTypeOf<MessageDTO>();
 });
