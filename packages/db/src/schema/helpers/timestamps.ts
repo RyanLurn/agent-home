@@ -6,7 +6,6 @@ export const timestamps = {
     .default(sql`(unixepoch() * 1000)`)
     .notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp_ms" })
-    .default(sql`(unixepoch() * 1000)`)
     .notNull()
     .$onUpdate(() => new Date()),
 };
