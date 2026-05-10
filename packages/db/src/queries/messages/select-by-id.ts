@@ -1,5 +1,9 @@
 import type { Result } from "@repo/core/types/result";
 
+import {
+  createFallbackError,
+  type FallBackError,
+} from "@repo/core/error/create-fallback";
 import { NotFoundError } from "@repo/core/error/classes/not-found";
 import { isNull, and, eq } from "drizzle-orm";
 
@@ -13,21 +17,39 @@ export async function selectMessageById({
   id,
 }: {
   id: SelectedMessage["id"];
-}): Promise<Result<MessageDTO, NotFoundError<"message">>> {
-  const [selectedMessage] = await db
-    .select()
-    .from(messageTable)
-    .where(and(eq(messageTable.id, id), isNull(messageTable.deletedAt)));
+}): Promise<Result<MessageDTO, NotFoundError<"message"> | FallBackError>> {
+  const startContext = {
+    inputs: { id },
+    processName: "selectMessageById",
+  };
 
-  if (selectedMessage) {
+  try {
+    const [selectedMessage] = await db
+      .select()
+      .from(messageTable)
+      .where(and(eq(messageTable.id, id), isNull(messageTable.deletedAt)));
+
+    if (selectedMessage) {
+      return {
+        success: true,
+        data: createMessageDTO(selectedMessage),
+      };
+    }
+
     return {
-      success: true,
-      data: createMessageDTO(selectedMessage),
+      success: false,
+      error: new NotFoundError<"message">({
+        context: { ...startContext, resource: "message" },
+      }),
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: createFallbackError({
+        message: "Failed to select message due to an unexpected error",
+        context: startContext,
+        cause: error,
+      }),
     };
   }
-
-  return {
-    success: false,
-    error: new NotFoundError<"message">({ context: { resource: "message" } }),
-  };
 }
