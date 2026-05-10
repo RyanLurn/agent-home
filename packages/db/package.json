@@ -8,6 +8,7 @@
     "lint": "eslint --cache",
     "test": "bun test",
     "test:dto": "bun test dto",
+    "test:queries": "bun test queries",
     "generate": "bun run --bun drizzle-kit generate",
     "migrate": "bun run --bun drizzle-kit migrate",
     "studio": "bun run --bun drizzle-kit studio"

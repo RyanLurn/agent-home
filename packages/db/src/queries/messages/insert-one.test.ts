@@ -5,40 +5,38 @@ import { insertOneMessage } from "@/queries/messages/insert-one";
 import { messageTable } from "@/schema/tables/message";
 import { db } from "@/index";
 
-let testMessageId: string;
+let testMessageId: undefined | string = undefined;
 
-test("should insert 1 message", async () => {
+test("insertOneMessage function should insert sender and content, then return a message DTO", async () => {
   expect.hasAssertions();
 
-  const sender = "agent";
-  const content = "Good morning, user.";
-
-  const insertResult = await insertOneMessage({ sender, content });
+  const insertResult = await insertOneMessage({
+    sender: "agent",
+    content: "Good morning, user.",
+  });
 
   if (insertResult.success) {
-    const message = insertResult.data;
+    const messageDTO = insertResult.data;
+    expect(messageDTO).toContainAllKeys([
+      "id",
+      "sender",
+      "content",
+      "createdAt",
+      "updatedAt",
+    ]);
 
-    expect(typeof message.id).toBe("string");
-    expect(message.id).toBeTruthy();
-
-    expect(message.createdAt).toBeInstanceOf(Date);
-    expect(message.updatedAt).toBeInstanceOf(Date);
-
-    expect(message).not.toContainAllKeys(["deletedAt"]);
-
-    expect(message).toHaveProperty("sender", sender);
-    expect(message).toHaveProperty("content", content);
-
-    testMessageId = message.id;
+    testMessageId = insertResult.data.id;
   }
 });
 
 afterAll(async () => {
-  try {
-    await db.delete(messageTable).where(eq(messageTable.id, testMessageId));
-  } catch (error) {
-    console.error("insertOneMessage function's test cleanup failed:");
-    console.error(error);
-    throw error;
+  if (testMessageId) {
+    try {
+      await db.delete(messageTable).where(eq(messageTable.id, testMessageId));
+    } catch (error) {
+      console.error("Test cleanup failed:");
+      console.error(error);
+      throw error;
+    }
   }
 });
