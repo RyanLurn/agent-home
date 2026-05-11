@@ -23,4 +23,5 @@ while (mode === "auto") {
   console.log(`[AGENT LLM] Text: ${text}`);
 
   // TODO: Execute script in sandbox
+  console.log("[AGENT SANDBOX] Executing code inside sandbox...");
 }
