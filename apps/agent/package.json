@@ -9,9 +9,11 @@
     "test": "bun run check-types && bun test"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.71",
     "@repo/core": "workspace:*",
     "@repo/db": "workspace:*",
     "@t3-oss/env-core": "catalog:",
+    "ai": "^6.0.177",
     "zod": "catalog:"
   },
   "devDependencies": {
