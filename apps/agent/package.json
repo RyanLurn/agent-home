@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.71",
+    "@ai-sdk/groq": "^3.0.39",
     "@repo/core": "workspace:*",
     "@repo/db": "workspace:*",
     "@t3-oss/env-core": "catalog:",
