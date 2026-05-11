@@ -1,4 +1,4 @@
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core";
 
 import {
   AGENT_CONTEXT_ENTRY_AUTHORS,
@@ -11,6 +11,16 @@ export const contextEntryTable = sqliteTable("context_entries", {
   id,
   author: text("author", { enum: AGENT_CONTEXT_ENTRY_AUTHORS }).notNull(),
   content: text("content").notNull(),
+  ...timestampsWithDelete,
+});
+
+export const sandboxOutputTable = sqliteTable("sandbox_outputs", {
+  id,
+  stdout: text("stdout"),
+  stderr: text("stderr"),
+  exitCode: integer("exit_code", { mode: "number" }),
+  signal: text("signal"),
+  durationMs: integer("duration_ms", { mode: "number" }).notNull(),
   ...timestampsWithDelete,
 });
 
