@@ -2,12 +2,20 @@ import { z } from "zod";
 
 const EnvelopeSenderSchema = z.enum(["client", "server"]);
 
-export const ClientConnectedEnvelopeSchema = z.object({
-  code: z.literal("CLIENT_CONNECTED_EVENT"),
-  sender: EnvelopeSenderSchema.extract(["server"]),
+export const NewClientConnectedEnvelopeSchema = z.object({
+  code: z.literal("NEW_CLIENT_CONNECTED_EVENT"),
+  sender: EnvelopeSenderSchema,
 });
-export type ClientConnectedEnvelope = z.infer<
-  typeof ClientConnectedEnvelopeSchema
+export type NewClientConnectedEnvelope = z.infer<
+  typeof NewClientConnectedEnvelopeSchema
+>;
+
+export const NewClientAcknowledgedEnvelopeSchema = z.object({
+  code: z.literal("NEW_CLIENT_ACKNOWLEDGED_EVENT"),
+  sender: EnvelopeSenderSchema,
+});
+export type NewClientAcknowledgedEnvelope = z.infer<
+  typeof NewClientAcknowledgedEnvelopeSchema
 >;
 
 export const NewChatMessageSentEnvelopeSchema = z.object({
@@ -32,7 +40,8 @@ export type NewChatMessageAcknowledgedEnvelope = z.infer<
 >;
 
 export const EnvelopeSchema = z.discriminatedUnion("code", [
-  ClientConnectedEnvelopeSchema,
+  NewClientConnectedEnvelopeSchema,
+  NewClientAcknowledgedEnvelopeSchema,
   NewChatMessageSentEnvelopeSchema,
   NewChatMessageAcknowledgedEnvelopeSchema,
 ]);
