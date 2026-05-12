@@ -58,6 +58,26 @@
         "vite": "catalog:",
       },
     },
+    "apps/user-server": {
+      "name": "@repo/user-server",
+      "dependencies": {
+        "@repo/core": "workspace:*",
+        "@repo/db": "workspace:*",
+        "@t3-oss/env-core": "catalog:",
+        "hono": "catalog:",
+        "zod": "catalog:",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/tsdown-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/bun": "catalog:",
+        "@types/node": "catalog:",
+        "eslint": "catalog:",
+        "tsdown": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
     "apps/web": {
       "name": "@repo/web",
       "dependencies": {
@@ -224,6 +244,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "^10.3.0",
+    "hono": "^4.12.18",
     "jsonc-parser": "^3.3.1",
     "lucide-react": "^1.14.0",
     "react": "^19.2.5",
@@ -488,6 +509,8 @@
     "@repo/typescript-config": ["@repo/typescript-config@workspace:configs/typescript"],
 
     "@repo/ui": ["@repo/ui@workspace:packages/ui"],
+
+    "@repo/user-server": ["@repo/user-server@workspace:apps/user-server"],
 
     "@repo/vite-config": ["@repo/vite-config@workspace:configs/vite"],
 
