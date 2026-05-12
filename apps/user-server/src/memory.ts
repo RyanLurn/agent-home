@@ -1,3 +1,3 @@
-import type { WSClient } from "@/types";
+import type { WSClientId, WSClient } from "@/types";
 
-export const wsClients = new Map<string, WSClient>();
+export const wsClients = new Map<WSClientId, WSClient>();
