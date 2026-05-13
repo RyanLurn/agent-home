@@ -8,6 +8,8 @@ import type {
   NewClientConnectedEnvelope,
 } from "@/envelope";
 
+import { userWSClients } from "@/memory";
+
 const clients: WSContext[] = [];
 
 export const app = new Hono()
@@ -18,7 +20,11 @@ export const app = new Hono()
       return {
         onOpen(_evt, ws) {
           // Add this connection to the list of connected clients
-          clients.push(ws);
+          userWSClients.add(ws);
+          const totalclients = userWSClients.size;
+          console.log(
+            `[User Server] A wild user client appeared! Encountered ${totalclients} client${totalclients > 1 ? "s" : ""}.`
+          );
 
           // Send server's acknowledgement to this client
           const newClientAcknowledgedEnvelope: NewClientAcknowledgedEnvelope = {
