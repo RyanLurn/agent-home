@@ -42,6 +42,24 @@ export const app = new Hono()
                   };
                   client.send(JSON.stringify(newMessageEvent));
                 }
+                // Done handling this case
+                break;
+              }
+              case "error": {
+                const payload = validEvent.payload;
+                switch (payload.code) {
+                  case "UNRECOGNIZED_EVENT_TYPE": {
+                    console.warn(
+                      `[User Server] User Client couldn't recognize the ${payload.unrecognizedEvent.type} event type: ${payload.message}.`
+                    );
+                    break;
+                  }
+                  case "INVALID_EVENT_DATA": {
+                    console.warn(
+                      `[User Server] User Client didn't accept the payload of ${payload.invalidEvent.type}: ${payload.message}.`
+                    );
+                  }
+                }
               }
             }
           }
