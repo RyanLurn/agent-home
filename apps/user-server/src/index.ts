@@ -1,6 +1,8 @@
 import { upgradeWebSocket } from "hono/bun";
 import { Hono } from "hono";
 
+import type { NewMessageEvent } from "@/schemas/envelope/events/message";
+
 import { EnvelopeSchema } from "@/schemas/envelope";
 import { userWSClients } from "@/memory";
 
@@ -34,7 +36,11 @@ export const app = new Hono()
                 );
                 // Broadcast the message to all clients
                 for (const client of userWSClients) {
-                  client.send(JSON.stringify(validEvent));
+                  const newMessageEvent: NewMessageEvent = {
+                    ...validEvent,
+                    emitter: "server",
+                  };
+                  client.send(JSON.stringify(newMessageEvent));
                 }
               }
             }
