@@ -1,7 +1,8 @@
+import { insertOneMessage } from "@repo/db/queries/messages/insert-one";
 import { upgradeWebSocket } from "hono/bun";
 import { Hono } from "hono";
 
-import type { NewMessageEvent } from "@/schemas/envelope/events/message";
+import type { NewMessageBroadcastEvent } from "@/schemas/envelope/events/message";
 
 import { EnvelopeSchema } from "@/schemas/envelope";
 import { userWSClients } from "@/memory";
@@ -20,7 +21,9 @@ export const app = new Hono()
             `[User Server] A wild user client appeared! Encountered ${totalclients} client${totalclients > 1 ? "s" : ""}.`
           );
         },
-        onMessage(evt, ws) {
+        // TODO: add error handling for async operations
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        async onMessage(evt) {
           // Parse and validate event data
           const parseEventDataResult = EnvelopeSchema.safeParse(evt.data);
 
@@ -30,17 +33,22 @@ export const app = new Hono()
             const validEvent = parseEventDataResult.data;
             switch (validEvent.type) {
               case "message.new": {
-                // TODO: Insert the new message into the database
                 console.log(
                   `[User Server] User Client sent new chat message: "${validEvent.payload.content}"`
                 );
-                // Broadcast the message to all clients
+                // Insert the new message into the database
+                const insertedMessage = await insertOneMessage(
+                  validEvent.payload
+                );
+                // Broadcast this message to all connected clients
+                const broadcastEvent: NewMessageBroadcastEvent = {
+                  id: crypto.randomUUID(),
+                  type: "message.new.broadcast",
+                  emitter: "server",
+                  payload: insertedMessage,
+                };
                 for (const client of userWSClients) {
-                  const newMessageEvent: NewMessageEvent = {
-                    ...validEvent,
-                    emitter: "server",
-                  };
-                  client.send(JSON.stringify(newMessageEvent));
+                  client.send(JSON.stringify(broadcastEvent));
                 }
                 // Done handling this case
                 break;
