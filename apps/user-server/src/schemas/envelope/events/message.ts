@@ -10,3 +10,13 @@ export const NewMessageEventSchema = z.object({
   payload: MessageDTOSchema.pick({ sender: true, content: true }),
 });
 export type NewMessageEvent = z.infer<typeof NewMessageEventSchema>;
+
+export const NewMessageBroadcastEventSchema = z.object({
+  id: z.uuidv4(),
+  type: z.literal("message.new.broadcast"),
+  emitter: EnvelopeEmitterSchema.extract(["server"]),
+  payload: MessageDTOSchema,
+});
+export type NewMessageBroadcastEvent = z.infer<
+  typeof NewMessageBroadcastEventSchema
+>;
