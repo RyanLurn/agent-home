@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { EnvelopeEmitterSchema } from "@/schemas/envelope/emitter";
+
 export const UnrecognizedEventTypePayloadSchema = z.object({
   code: z.literal("UNRECOGNIZED_EVENT_TYPE"),
   message: z.string().min(1),
@@ -27,6 +29,7 @@ export type InvalidEventDataPayload = z.infer<
 export const ErrorEventSchema = z.object({
   id: z.uuidv4(),
   type: z.literal("error"),
+  emitter: EnvelopeEmitterSchema,
   payload: z.discriminatedUnion("code", [
     UnrecognizedEventTypePayloadSchema,
     InvalidEventDataPayloadSchema,
