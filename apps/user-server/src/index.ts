@@ -20,8 +20,13 @@ export const app = new Hono()
         onMessage(evt, ws) {
           console.log("The wild client used Send Message!");
         },
-        onClose(evt, ws) {
-          console.log("The wild client ran away!");
+        onClose(_evt, ws) {
+          // Remove this connection from the list of connected clients
+          userWSClients.delete(ws);
+          const totalclients = userWSClients.size;
+          console.log(
+            `[User Server] A wild user client ran away! Only ${totalclients} client${totalclients > 1 ? "s" : ""} left.`
+          );
         },
       };
     })
