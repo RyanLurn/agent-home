@@ -1,3 +1,3 @@
-import type { WSClientId, WSClient } from "@/types";
+import type { WSContext } from "hono/ws";
 
-export const wsClients = new Map<WSClientId, WSClient>();
+export const userWSClients = new Set<WSContext>();
