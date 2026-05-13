@@ -1,9 +1,11 @@
 import { insertOneMessage } from "@repo/db/queries/messages/insert-one";
 import { upgradeWebSocket } from "hono/bun";
+import { prettifyError } from "zod/v4/core";
 import { Hono } from "hono";
 
 import type { NewMessageBroadcastEvent } from "@/schemas/envelope/events/message";
 import type { AcknowledgeEvent } from "@/schemas/envelope/events/acknowledge";
+import type { ErrorEvent } from "@/schemas/envelope/events/error";
 
 import { EnvelopeSchema } from "@/schemas/envelope";
 import { userWSClients } from "@/memory";
@@ -26,7 +28,9 @@ export const app = new Hono()
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         async onMessage(evt, ws) {
           // Parse and validate event data
-          const parseEventDataResult = EnvelopeSchema.safeParse(evt.data);
+          const parseEventDataResult = EnvelopeSchema.safeParse(evt.data, {
+            reportInput: true,
+          });
 
           // Handling the result
           // Valid cases
@@ -73,12 +77,25 @@ export const app = new Hono()
                   }
                   case "INVALID_EVENT_DATA": {
                     console.warn(
-                      `[User Server] User Client didn't accept the payload of ${payload.invalidEvent.type}: ${payload.message}.`
+                      `[User Server] User Client didn't accept the payload of ${payload.invalidEvent ? payload.invalidEvent.type : "our event data"}: ${payload.message}.`
                     );
                   }
                 }
               }
             }
+            // Invalid cases
+          } else {
+            // TODO: Make error handling more granular
+            const errorEvent: ErrorEvent = {
+              id: crypto.randomUUID(),
+              type: "error",
+              emitter: "server",
+              payload: {
+                code: "INVALID_EVENT_DATA",
+                message: prettifyError(parseEventDataResult.error),
+              },
+            };
+            ws.send(JSON.stringify(errorEvent));
           }
         },
         onClose(_evt, ws) {

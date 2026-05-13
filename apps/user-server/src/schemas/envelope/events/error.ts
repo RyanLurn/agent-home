@@ -17,10 +17,12 @@ export type UnrecognizedEventTypePayload = z.infer<
 export const InvalidEventDataPayloadSchema = z.object({
   code: z.literal("INVALID_EVENT_DATA"),
   message: z.string().min(1),
-  invalidEvent: z.object({
-    id: z.uuidv4(),
-    type: z.string(),
-  }),
+  invalidEvent: z
+    .object({
+      id: z.uuidv4(),
+      type: z.string(),
+    })
+    .optional(),
 });
 export type InvalidEventDataPayload = z.infer<
   typeof InvalidEventDataPayloadSchema
