@@ -1,6 +1,7 @@
 import { upgradeWebSocket } from "hono/bun";
 import { Hono } from "hono";
 
+import { EnvelopeSchema } from "@/schemas/envelope";
 import { userWSClients } from "@/memory";
 
 export const app = new Hono()
@@ -18,7 +19,26 @@ export const app = new Hono()
           );
         },
         onMessage(evt, ws) {
-          console.log("The wild client used Send Message!");
+          // Parse and validate event data
+          const parseEventDataResult = EnvelopeSchema.safeParse(evt.data);
+
+          // Handling the result
+          // Valid cases
+          if (parseEventDataResult.success) {
+            const validEvent = parseEventDataResult.data;
+            switch (validEvent.type) {
+              case "message.new": {
+                // TODO: Insert the new message into the database
+                console.log(
+                  `[User Server] User Client sent new chat message: "${validEvent.payload.content}"`
+                );
+                // Broadcast the message to all clients
+                for (const client of userWSClients) {
+                  client.send(JSON.stringify(validEvent));
+                }
+              }
+            }
+          }
         },
         onClose(_evt, ws) {
           // Remove this connection from the list of connected clients
