@@ -3,6 +3,7 @@ import { upgradeWebSocket } from "hono/bun";
 import { Hono } from "hono";
 
 import type { NewMessageBroadcastEvent } from "@/schemas/envelope/events/message";
+import type { AcknowledgeEvent } from "@/schemas/envelope/events/acknowledge";
 
 import { EnvelopeSchema } from "@/schemas/envelope";
 import { userWSClients } from "@/memory";
@@ -23,7 +24,7 @@ export const app = new Hono()
         },
         // TODO: add error handling for async operations
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        async onMessage(evt) {
+        async onMessage(evt, ws) {
           // Parse and validate event data
           const parseEventDataResult = EnvelopeSchema.safeParse(evt.data);
 
@@ -40,6 +41,14 @@ export const app = new Hono()
                 const insertedMessage = await insertOneMessage(
                   validEvent.payload
                 );
+                // Acknowledge this event
+                const acknowledgeEvent: AcknowledgeEvent = {
+                  id: crypto.randomUUID(),
+                  type: "acknowledge",
+                  emitter: "server",
+                  acknowledgedEventId: validEvent.id,
+                };
+                ws.send(JSON.stringify(acknowledgeEvent));
                 // Broadcast this message to all connected clients
                 const broadcastEvent: NewMessageBroadcastEvent = {
                   id: crypto.randomUUID(),
