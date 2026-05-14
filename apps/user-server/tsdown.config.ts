@@ -4,6 +4,6 @@ export default defineConfig({
   dts: {
     sourcemap: true,
   },
-  entry: "src/rpc-client.ts",
+  entry: ["src/client/**/*.ts", "!src/client/**/*.test.ts"],
   unbundle: true,
 });
