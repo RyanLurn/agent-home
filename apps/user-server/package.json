@@ -5,6 +5,7 @@
   "scripts": {
     "start": "bun run src/serve.ts",
     "try": "bun run src/try.ts",
+    "build": "tsdown",
     "check-types": "tsc --noEmit",
     "lint": "eslint --cache",
     "test": "bun run check-types && bun test"
