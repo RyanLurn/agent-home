@@ -64,6 +64,7 @@
         "@repo/core": "workspace:*",
         "@repo/db": "workspace:*",
         "@repo/ui": "workspace:*",
+        "@repo/user-server": "workspace:*",
         "@tanstack/react-router": "catalog:",
         "@tanstack/react-start": "catalog:",
         "lucide-react": "catalog:",
