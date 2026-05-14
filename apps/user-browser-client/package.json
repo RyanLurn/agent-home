@@ -1,5 +1,5 @@
 {
-  "name": "@repo/web",
+  "name": "@repo/user-browser-client",
   "type": "module",
   "private": "true",
   "scripts": {
@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@repo/core": "workspace:*",
+    "@repo/db": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tanstack/react-router": "catalog:",
     "@tanstack/react-start": "catalog:",
