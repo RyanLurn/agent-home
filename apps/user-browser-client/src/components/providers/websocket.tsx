@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
   useRef,
+  use,
 } from "react";
 import { rpcClient } from "@repo/user-server/rpc";
 
@@ -48,4 +49,16 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       {children}
     </WebSocketContext>
   );
+}
+
+export function useWebSocket() {
+  const wsContext = use(WebSocketContext);
+
+  if (!wsContext) {
+    throw new Error(
+      "useWebSocket hook must be used inside a WebSocketProvider"
+    );
+  }
+
+  return wsContext;
 }
