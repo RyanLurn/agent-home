@@ -5,11 +5,15 @@ import {
   createContext,
   useCallback,
   useEffect,
+  useState,
   useRef,
 } from "react";
 import { rpcClient } from "@repo/user-server/rpc";
 
+type WebSocketStatus = "errored" | "opened" | "closed";
+
 interface WebSocketContextProps {
+  status: WebSocketStatus;
   sendData: (data: Envelope) => void;
 }
 
@@ -17,6 +21,7 @@ const WebSocketContext = createContext<WebSocketContextProps | null>(null);
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
   const wsRef = useRef<WebSocket | null>(null);
+  const [wsStatus, setWSStatus] = useState<WebSocketStatus>("closed");
 
   const sendData = useCallback((data: Envelope) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
@@ -28,10 +33,19 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     const ws = rpcClient.ws.$ws();
     wsRef.current = ws;
 
+    // Event handlers
+    ws.onopen = () => setWSStatus("opened");
+    ws.onclose = () => setWSStatus("closed");
+    ws.onerror = () => setWSStatus("errored");
+
     return () => {
       ws.close();
     };
   }, []);
 
-  return <WebSocketContext value={{ sendData }}>{children}</WebSocketContext>;
+  return (
+    <WebSocketContext value={{ status: wsStatus, sendData }}>
+      {children}
+    </WebSocketContext>
+  );
 }
