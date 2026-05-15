@@ -57,33 +57,22 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
           case "message.new.broadcast": {
             // Update the chat store's state
             addChatMessage(envelope.payload);
-
-            // Acknowledge
-            const acknowledgeEvent: AcknowledgeEvent = {
-              id: crypto.randomUUID(),
-              type: "acknowledge",
-              emitter: "client",
-              acknowledgedEventId: envelope.id,
-            };
-            ws.send(JSON.stringify(acknowledgeEvent));
-
-            // End case
             break;
           }
           // TODO: handle other envelope types
           default: {
             console.log(envelope);
-
-            // Acknowledge
-            const acknowledgeEvent: AcknowledgeEvent = {
-              id: crypto.randomUUID(),
-              type: "acknowledge",
-              emitter: "client",
-              acknowledgedEventId: envelope.id,
-            };
-            ws.send(JSON.stringify(acknowledgeEvent));
           }
         }
+
+        // Acknowledge
+        const acknowledgeEvent: AcknowledgeEvent = {
+          id: crypto.randomUUID(),
+          type: "acknowledge",
+          emitter: "client",
+          acknowledgedEventId: envelope.id,
+        };
+        ws.send(JSON.stringify(acknowledgeEvent));
       } else {
         // TODO: handle invalid event data
         console.error(parseEventDataResult.error.issues);
