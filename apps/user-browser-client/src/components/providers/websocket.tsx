@@ -1,5 +1,3 @@
-import type { Envelope } from "@repo/user-server/envelope";
-
 import {
   type ReactNode,
   createContext,
@@ -9,6 +7,7 @@ import {
   useRef,
   use,
 } from "react";
+import { EnvelopeSchema, type Envelope } from "@repo/user-server/envelope";
 import { rpcClient } from "@repo/user-server/rpc";
 
 type WebSocketStatus = "errored" | "opened" | "closed";
@@ -38,6 +37,22 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     ws.onopen = () => setWSStatus("opened");
     ws.onclose = () => setWSStatus("closed");
     ws.onerror = () => setWSStatus("errored");
+
+    ws.onmessage = (evt) => {
+      const parseEventDataResult = EnvelopeSchema.safeParse(
+        JSON.parse(String(evt.data))
+      );
+
+      if (parseEventDataResult.success) {
+        const envelope = parseEventDataResult.data;
+
+        // TODO: handle envelope
+        console.log(envelope);
+      } else {
+        // TODO: handle invalid event data
+        console.error(parseEventDataResult.error.issues);
+      }
+    };
 
     return () => {
       ws.close();
