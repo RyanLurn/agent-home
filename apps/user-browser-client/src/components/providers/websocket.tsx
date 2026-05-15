@@ -7,8 +7,14 @@ import {
   useRef,
   use,
 } from "react";
-import { EnvelopeSchema, type Envelope } from "@repo/user-server/envelope";
+import {
+  type AcknowledgeEvent,
+  EnvelopeSchema,
+  type Envelope,
+} from "@repo/user-server/envelope";
 import { rpcClient } from "@repo/user-server/rpc";
+
+import { useChatStore } from "@/stores/chat";
 
 type WebSocketStatus = "errored" | "opened" | "closed";
 
@@ -22,6 +28,7 @@ const WebSocketContext = createContext<WebSocketContextProps | null>(null);
 export function WebSocketProvider({ children }: { children: ReactNode }) {
   const wsRef = useRef<WebSocket | null>(null);
   const [wsStatus, setWSStatus] = useState<WebSocketStatus>("closed");
+  const addChatMessage = useChatStore((state) => state.addMessage);
 
   const sendData = useCallback((data: Envelope) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
@@ -46,8 +53,37 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       if (parseEventDataResult.success) {
         const envelope = parseEventDataResult.data;
 
-        // TODO: handle envelope
-        console.log(envelope);
+        switch (envelope.type) {
+          case "message.new.broadcast": {
+            // Update the chat store's state
+            addChatMessage(envelope.payload);
+
+            // Acknowledge
+            const acknowledgeEvent: AcknowledgeEvent = {
+              id: crypto.randomUUID(),
+              type: "acknowledge",
+              emitter: "client",
+              acknowledgedEventId: envelope.id,
+            };
+            ws.send(JSON.stringify(acknowledgeEvent));
+
+            // End case
+            break;
+          }
+          // TODO: handle other envelope types
+          default: {
+            console.log(envelope);
+
+            // Acknowledge
+            const acknowledgeEvent: AcknowledgeEvent = {
+              id: crypto.randomUUID(),
+              type: "acknowledge",
+              emitter: "client",
+              acknowledgedEventId: envelope.id,
+            };
+            ws.send(JSON.stringify(acknowledgeEvent));
+          }
+        }
       } else {
         // TODO: handle invalid event data
         console.error(parseEventDataResult.error.issues);
@@ -57,7 +93,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     return () => {
       ws.close();
     };
-  }, []);
+  }, [addChatMessage]);
 
   return (
     <WebSocketContext value={{ status: wsStatus, sendData }}>
