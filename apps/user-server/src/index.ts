@@ -28,9 +28,13 @@ export const app = new Hono()
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         async onMessage(evt, ws) {
           // Parse and validate event data
-          const parseEventDataResult = EnvelopeSchema.safeParse(evt.data, {
-            reportInput: true,
-          });
+          const parseEventDataResult = EnvelopeSchema.safeParse(
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
+            JSON.parse(evt.data.toString()),
+            {
+              reportInput: true,
+            }
+          );
 
           // Handling the result
           // Valid cases
