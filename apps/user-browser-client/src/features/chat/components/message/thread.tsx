@@ -1,8 +1,8 @@
-import type { MessageDTO } from "@repo/db/dto/message";
-
+import { MessageDTOSchema, type MessageDTO } from "@repo/db/dto/message";
 import { type ComponentProps, useEffect, useState } from "react";
 import { toast } from "@repo/ui/components/toaster";
 import { cn } from "@repo/ui/lib/utils";
+import { prettifyError } from "zod";
 
 import { MessageBubble } from "@/features/chat/components/message/bubble";
 
@@ -15,7 +15,7 @@ export function MessageThread({
   className,
   ...props
 }: MessageThreadProps) {
-  const [messages] = useState(initialMessages);
+  const [messages, setMessages] = useState(initialMessages);
 
   useEffect(() => {
     const chatEventSource = new EventSource("/api/sse/chat");
@@ -30,6 +30,21 @@ export function MessageThread({
 
     chatEventSource.addEventListener("ping", () => {
       toast.info("Pinged by server");
+    });
+
+    chatEventSource.addEventListener("new-message", (event) => {
+      const parseEventDataResult = MessageDTOSchema.safeParse(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        JSON.parse(event.data)
+      );
+      if (parseEventDataResult.success) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          parseEventDataResult.data,
+        ]);
+      } else {
+        toast.error(prettifyError(parseEventDataResult.error));
+      }
     });
 
     return () => {

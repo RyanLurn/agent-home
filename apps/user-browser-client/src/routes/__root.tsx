@@ -45,7 +45,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <ScriptOnce children={inlineThemeScript} />
         <ThemeProvider>
           <Toaster position="top-center" closeButton richColors />
-          {children}
+          <div className="h-screen">{children}</div>
           <ModeToggle className="fixed top-3 right-3 z-50" />
         </ThemeProvider>
         <Scripts />
