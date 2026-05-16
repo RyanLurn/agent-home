@@ -87,26 +87,6 @@
         "vite": "catalog:",
       },
     },
-    "apps/user-server": {
-      "name": "@repo/user-server",
-      "dependencies": {
-        "@repo/core": "workspace:*",
-        "@repo/db": "workspace:*",
-        "@t3-oss/env-core": "catalog:",
-        "hono": "catalog:",
-        "zod": "catalog:",
-      },
-      "devDependencies": {
-        "@repo/eslint-config": "workspace:*",
-        "@repo/tsdown-config": "workspace:*",
-        "@repo/typescript-config": "workspace:*",
-        "@types/bun": "catalog:",
-        "@types/node": "catalog:",
-        "eslint": "catalog:",
-        "tsdown": "catalog:",
-        "typescript": "catalog:",
-      },
-    },
     "configs/eslint": {
       "name": "@repo/eslint-config",
       "devDependencies": {
@@ -219,24 +199,6 @@
         "react": "catalog:",
         "react-dom": "catalog:",
         "zod": "catalog:",
-      },
-    },
-    "packages/ws": {
-      "name": "@repo/ws",
-      "dependencies": {
-        "@repo/core": "workspace:*",
-        "@repo/db": "workspace:*",
-        "zod": "catalog:",
-      },
-      "devDependencies": {
-        "@repo/eslint-config": "workspace:*",
-        "@repo/tsdown-config": "workspace:*",
-        "@repo/typescript-config": "workspace:*",
-        "@types/bun": "catalog:",
-        "@types/node": "catalog:",
-        "eslint": "catalog:",
-        "tsdown": "catalog:",
-        "typescript": "catalog:",
       },
     },
     "scripts/grab": {
@@ -534,11 +496,7 @@
 
     "@repo/user-browser-client": ["@repo/user-browser-client@workspace:apps/user-browser-client"],
 
-    "@repo/user-server": ["@repo/user-server@workspace:apps/user-server"],
-
     "@repo/vite-config": ["@repo/vite-config@workspace:configs/vite"],
-
-    "@repo/ws": ["@repo/ws@workspace:packages/ws"],
 
     "@rolldown/binding-android-arm64": ["@rolldown/binding-android-arm64@1.0.0-rc.17", "", { "os": "android", "cpu": "arm64" }, "sha512-s70pVGhw4zqGeFnXWvAzJDlvxhlRollagdCCKRgOsgUOH3N1l0LIxf83AtGzmb5SiVM4Hjl5HyarMRfdfj3DaQ=="],
 
