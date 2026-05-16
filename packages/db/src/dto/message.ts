@@ -16,7 +16,7 @@ export function createMessageDTO(selectedMessage: SelectedMessage) {
 }
 
 export const MessageDTOSchema = z.strictObject({
-  id: z.uuidv4(),
+  id: z.uuidv7(),
   sender: z.enum(MESSAGE_SENDERS),
   content: z.string(),
   createdAt: z.iso.datetime(),
