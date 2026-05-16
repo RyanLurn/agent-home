@@ -11,15 +11,13 @@
     "@repo/core": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/ui": "workspace:*",
-    "@repo/user-server": "workspace:*",
     "@tanstack/react-router": "catalog:",
     "@tanstack/react-start": "catalog:",
     "hono": "catalog:",
     "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "zod": "catalog:",
-    "zustand": "5.0.13"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
