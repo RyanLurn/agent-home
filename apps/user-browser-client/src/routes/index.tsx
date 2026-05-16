@@ -9,11 +9,14 @@ export const Route = createFileRoute("/")({
 });
 
 function IndexPage() {
-  const messages = Route.useLoaderData();
+  const initialMessages = Route.useLoaderData();
 
   return (
     <div className="mx-auto flex size-full max-w-2xl flex-col items-center gap-y-6">
-      <MessageThread className="my-6 flex-1" messages={messages} />
+      <MessageThread
+        initialMessages={initialMessages}
+        className="my-6 flex-1"
+      />
     </div>
   );
 }

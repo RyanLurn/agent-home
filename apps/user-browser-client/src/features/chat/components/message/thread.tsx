@@ -1,19 +1,21 @@
 import type { MessageDTO } from "@repo/db/dto/message";
-import type { ComponentProps } from "react";
 
+import { type ComponentProps, useState } from "react";
 import { cn } from "@repo/ui/lib/utils";
 
 import { MessageBubble } from "@/features/chat/components/message/bubble";
 
 interface MessageThreadProps extends ComponentProps<"div"> {
-  messages: MessageDTO[];
+  initialMessages: MessageDTO[];
 }
 
 export function MessageThread({
-  messages,
+  initialMessages,
   className,
   ...props
 }: MessageThreadProps) {
+  const [messages] = useState(initialMessages);
+
   return (
     <div
       className={cn("flex size-full flex-col gap-y-6", className)}
