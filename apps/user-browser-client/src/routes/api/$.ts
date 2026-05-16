@@ -21,7 +21,7 @@ const api = new Hono().basePath("/api").get("/sse/chat", (c) => {
 
     // Keep alive
     while (!stream.aborted) {
-      await stream.sleep(15_000);
+      await stream.sleep(5000);
       await stream.writeSSE({ event: "ping", data: "" });
     }
   });
