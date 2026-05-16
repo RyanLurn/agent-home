@@ -6,7 +6,7 @@ export const chatEventEmitter = new EventEmitter();
 
 export const NewMessageEventSchema = z.object({
   event: z.literal("new-message"),
-  id: z.uuidv7(),
+  id: MessageDTOSchema.shape.id,
   data: MessageDTOSchema,
 });
 export type NewMessageEvent = z.infer<typeof NewMessageEventSchema>;
