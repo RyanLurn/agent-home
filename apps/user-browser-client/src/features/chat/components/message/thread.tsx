@@ -31,6 +31,10 @@ export function MessageThread({
     chatEventSource.addEventListener("ping", () => {
       toast.info("Pinged by server");
     });
+
+    return () => {
+      chatEventSource.close();
+    };
   }, []);
 
   return (
