@@ -1,6 +1,7 @@
 import type { MessageDTO } from "@repo/db/dto/message";
 
-import { type ComponentProps, useState } from "react";
+import { type ComponentProps, useEffect, useState } from "react";
+import { toast } from "@repo/ui/components/toaster";
 import { cn } from "@repo/ui/lib/utils";
 
 import { MessageBubble } from "@/features/chat/components/message/bubble";
@@ -15,6 +16,22 @@ export function MessageThread({
   ...props
 }: MessageThreadProps) {
   const [messages] = useState(initialMessages);
+
+  useEffect(() => {
+    const chatEventSource = new EventSource("/api/sse/chat");
+
+    // Event handlers
+    chatEventSource.onopen = () =>
+      toast.success(
+        `SSE endpoint connected with ready state of "${chatEventSource.readyState}"`
+      );
+    chatEventSource.onerror = () =>
+      toast.error("An error occurred while attempting to connect.");
+
+    chatEventSource.addEventListener("ping", () => {
+      toast.info("Pinged by server");
+    });
+  }, []);
 
   return (
     <div
