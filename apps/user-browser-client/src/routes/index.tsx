@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { getAllMessages } from "@/features/chat/server-functions/get-all-messages";
 import { MessageThread } from "@/features/chat/components/message/thread";
+import { ChatInput } from "@/features/chat/components/input";
 
 export const Route = createFileRoute("/")({
   loader: () => getAllMessages(),
@@ -17,6 +18,7 @@ function IndexPage() {
         initialMessages={initialMessages}
         className="my-6 flex-1"
       />
+      <ChatInput />
     </div>
   );
 }
