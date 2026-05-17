@@ -1,4 +1,5 @@
 import { insertOneMessage } from "@repo/db/queries/messages/insert-one";
+import { client } from "@repo/user-web/client";
 import { validator } from "hono/validator";
 import { Hono } from "hono";
 import { z } from "zod";
@@ -31,10 +32,30 @@ export const messagesRoutes = new Hono().post(
   }),
   async (c) => {
     const body = c.req.valid("json");
+
     const returnedMessage = await insertOneMessage({
       sender: "agent",
       content: body.content,
     });
-    return c.json({ data: returnedMessage }, 201);
+
+    const response = await client.api.chat.messages.$post({
+      json: {
+        id: returnedMessage.id,
+      },
+    });
+
+    if (response.ok) {
+      return c.json({ data: returnedMessage }, 201);
+    }
+
+    return c.json(
+      {
+        error: {
+          message: "Internal server error",
+          code: "INTERNAL_SERVER_ERROR",
+        },
+      },
+      500
+    );
   }
 );

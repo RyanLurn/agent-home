@@ -37,6 +37,7 @@
       "dependencies": {
         "@repo/core": "workspace:*",
         "@repo/db": "workspace:*",
+        "@repo/user-web": "workspace:*",
         "@t3-oss/env-core": "catalog:",
         "hono": "catalog:",
         "zod": "catalog:",
