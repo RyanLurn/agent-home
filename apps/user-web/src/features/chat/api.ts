@@ -1,6 +1,9 @@
+import { selectMessageById } from "@repo/db/queries/messages/select-by-id";
 import { MessageDTOSchema } from "@repo/db/dto/message";
 import { validator } from "hono/validator";
 import { Hono } from "hono";
+
+import { emitNewMessageEvent } from "@/features/chat/event-emitter";
 
 export const chatAPI = new Hono().post(
   "/messages",
@@ -24,8 +27,38 @@ export const chatAPI = new Hono().post(
       422
     );
   }),
-  (c) => {
+  async (c) => {
     const { id } = c.req.valid("json");
-    return c.json({ data: id }, 201);
+    const selectResult = await selectMessageById({ id });
+
+    if (selectResult.success) {
+      emitNewMessageEvent(selectResult.data);
+      return c.json({ data: { event: "new-message", id } }, 201);
+    }
+
+    const selectError = selectResult.error;
+
+    if (selectError.code === "NOT_FOUND_ERROR") {
+      return c.json(
+        {
+          error: {
+            message: `Could not find chat message with id: ${id}`,
+            code: selectError.code,
+            nonExistentId: id,
+          },
+        },
+        400
+      );
+    }
+
+    return c.json(
+      {
+        error: {
+          message: "Internal server error",
+          code: "INTERNAL_SERVER_ERROR",
+        },
+      },
+      500
+    );
   }
 );
