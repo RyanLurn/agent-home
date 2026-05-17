@@ -5,6 +5,7 @@ import { cn } from "@repo/ui/lib/utils";
 import { prettifyError } from "zod";
 
 import { MessageBubble } from "@/features/chat/components/message/bubble";
+import { client } from "@/lib/api/client";
 
 interface MessageThreadProps extends ComponentProps<"div"> {
   initialMessages: MessageDTO[];
@@ -18,7 +19,9 @@ export function MessageThread({
   const [messages, setMessages] = useState(initialMessages);
 
   useEffect(() => {
-    const chatEventSource = new EventSource("/api/sse/chat");
+    const chatEventSource = new EventSource(
+      client.api.chat.messages.stream.$path()
+    );
 
     // Event handlers
     chatEventSource.onopen = () =>
