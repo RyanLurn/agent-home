@@ -4,8 +4,16 @@
   "private": "true",
   "scripts": {
     "dev": "bunx --bun vite dev",
+    "build:lib": "tsdown",
     "check-types": "tsc --noEmit",
     "lint": "eslint --cache"
+  },
+  "exports": {
+    "./client": {
+      "import": "./dist/client.mjs",
+      "types": "./dist/client.d.mts",
+      "default": "./dist/client.mjs"
+    }
   },
   "dependencies": {
     "@repo/core": "workspace:*",
@@ -30,6 +38,7 @@
     "babel-plugin-react-compiler": "catalog:",
     "eslint": "catalog:",
     "tailwindcss": "catalog:",
+    "tsdown": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
   }

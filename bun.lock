@@ -101,6 +101,7 @@
         "babel-plugin-react-compiler": "catalog:",
         "eslint": "catalog:",
         "tailwindcss": "catalog:",
+        "tsdown": "catalog:",
         "typescript": "catalog:",
         "vite": "catalog:",
       },
