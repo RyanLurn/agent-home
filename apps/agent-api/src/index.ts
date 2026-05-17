@@ -1,3 +1,7 @@
 import { Hono } from "hono";
 
-export const app = new Hono().get("/", (c) => c.text("OK"));
+import { messagesRoutes } from "@/resources/messages";
+
+export const app = new Hono()
+  .get("/", (c) => c.text("OK"))
+  .route("/messages", messagesRoutes);
