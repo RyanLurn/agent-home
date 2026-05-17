@@ -58,8 +58,8 @@
         "vite": "catalog:",
       },
     },
-    "apps/user-browser-client": {
-      "name": "@repo/user-browser-client",
+    "apps/user-web": {
+      "name": "@repo/user-web",
       "dependencies": {
         "@repo/core": "workspace:*",
         "@repo/db": "workspace:*",
@@ -494,7 +494,7 @@
 
     "@repo/ui": ["@repo/ui@workspace:packages/ui"],
 
-    "@repo/user-browser-client": ["@repo/user-browser-client@workspace:apps/user-browser-client"],
+    "@repo/user-web": ["@repo/user-web@workspace:apps/user-web"],
 
     "@repo/vite-config": ["@repo/vite-config@workspace:configs/vite"],
 

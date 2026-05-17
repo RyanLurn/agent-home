@@ -1,5 +1,5 @@
 {
-  "name": "@repo/user-browser-client",
+  "name": "@repo/user-web",
   "type": "module",
   "private": "true",
   "scripts": {
