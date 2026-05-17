@@ -1,0 +1,25 @@
+{
+  "name": "@repo/agent-api",
+  "type": "module",
+  "private": "true",
+  "scripts": {
+    "start": "bun run --hot src/serve.ts",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint --cache"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/db": "workspace:*",
+    "@t3-oss/env-core": "catalog:",
+    "hono": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/bun": "catalog:",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  }
+}
