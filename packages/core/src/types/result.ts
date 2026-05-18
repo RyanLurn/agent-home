@@ -1,46 +1,26 @@
-export type Context<
-  TArgs extends Array<unknown>,
-  TFunctionName extends string,
-  TMetadata extends Record<string, unknown> | null = null,
-> = {
-  args: TArgs;
-  functionName: TFunctionName;
+export type Context = {
+  functionName: string;
+  args: Record<string, unknown>;
+  metadata: Record<string, unknown>;
   performance: {
     startTime: number;
     endTime: number;
     duration: number;
   };
-  metadata: TMetadata;
 };
 
-export type Failure<
-  TError extends Error,
-  TArgs extends Array<unknown>,
-  TFunctionName extends string,
-  TMetadata extends Record<string, unknown> | null = null,
-> = {
+export type Failure<TError extends Error> = {
   success: false;
   error: TError;
-  context: Context<TArgs, TFunctionName, TMetadata>;
+  context: Context;
 };
 
-export type Success<
-  TValue,
-  TArgs extends Array<unknown>,
-  TFunctionName extends string,
-  TMetadata extends Record<string, unknown> | null = null,
-> = {
+export type Success<TValue> = {
   success: true;
   value: TValue;
-  context: Context<TArgs, TFunctionName, TMetadata>;
+  context: Context;
 };
 
-export type Result<
-  TValue,
-  TError extends Error,
-  TArgs extends Array<unknown>,
-  TFunctionName extends string,
-  TMetadata extends Record<string, unknown> | null = null,
-> =
-  | Success<TValue, TArgs, TFunctionName, TMetadata>
-  | Failure<TError, TArgs, TFunctionName, TMetadata>;
+export type Result<TValue, TError extends Error> =
+  | Success<TValue>
+  | Failure<TError>;
