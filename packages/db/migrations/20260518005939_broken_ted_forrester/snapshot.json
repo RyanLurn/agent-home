@@ -1,7 +1,7 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "413ba9c6-c901-4173-9caa-08fa8b15e560",
+  "id": "625f7362-f414-4f28-a228-7ee94f8b90b2",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -12,6 +12,10 @@
     },
     {
       "name": "notifications",
+      "entityType": "tables"
+    },
+    {
+      "name": "sandbox_outputs",
       "entityType": "tables"
     },
     {
@@ -62,7 +66,7 @@
       "type": "integer",
       "notNull": true,
       "autoincrement": false,
-      "default": "(unixepoch() * 1000)",
+      "default": null,
       "generated": null,
       "name": "updated_at",
       "entityType": "columns",
@@ -132,7 +136,7 @@
       "type": "integer",
       "notNull": true,
       "autoincrement": false,
-      "default": "(unixepoch() * 1000)",
+      "default": null,
       "generated": null,
       "name": "updated_at",
       "entityType": "columns",
@@ -147,6 +151,96 @@
       "name": "deleted_at",
       "entityType": "columns",
       "table": "notifications"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "sandbox_outputs"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "stdout",
+      "entityType": "columns",
+      "table": "sandbox_outputs"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "stderr",
+      "entityType": "columns",
+      "table": "sandbox_outputs"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "exit_code",
+      "entityType": "columns",
+      "table": "sandbox_outputs"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "signal",
+      "entityType": "columns",
+      "table": "sandbox_outputs"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "duration_ms",
+      "entityType": "columns",
+      "table": "sandbox_outputs"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "(unixepoch() * 1000)",
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "sandbox_outputs"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "sandbox_outputs"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "deleted_at",
+      "entityType": "columns",
+      "table": "sandbox_outputs"
     },
     {
       "type": "text",
@@ -179,6 +273,46 @@
       "table": "messages"
     },
     {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'sent'",
+      "generated": null,
+      "name": "status",
+      "entityType": "columns",
+      "table": "messages"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "sent_at",
+      "entityType": "columns",
+      "table": "messages"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "shown_at",
+      "entityType": "columns",
+      "table": "messages"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "read_at",
+      "entityType": "columns",
+      "table": "messages"
+    },
+    {
       "type": "integer",
       "notNull": true,
       "autoincrement": false,
@@ -192,7 +326,7 @@
       "type": "integer",
       "notNull": true,
       "autoincrement": false,
-      "default": "(unixepoch() * 1000)",
+      "default": null,
       "generated": null,
       "name": "updated_at",
       "entityType": "columns",
@@ -224,6 +358,15 @@
       "nameExplicit": false,
       "name": "notifications_pk",
       "table": "notifications",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "sandbox_outputs_pk",
+      "table": "sandbox_outputs",
       "entityType": "pks"
     },
     {
