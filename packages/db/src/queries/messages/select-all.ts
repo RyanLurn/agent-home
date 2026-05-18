@@ -1,4 +1,4 @@
-import type { Result } from "@repo/core/types/result";
+import type { Context, Result } from "@repo/core/types/result";
 
 import {
   createFallbackError,
@@ -13,17 +13,12 @@ import { messageTable } from "@/schema/tables/message";
 import { db } from "@/index";
 
 export async function selectAllMessages(): Promise<
-  Result<
-    MessageDTO[],
-    UnexpectedDatabaseError | FallBackError,
-    [],
-    "selectAllMessages"
-  >
+  Result<MessageDTO[], UnexpectedDatabaseError | FallBackError>
 > {
-  const sharedContext = {
-    args: [] as [],
+  const sharedContext: Omit<Context, "performance"> = {
     functionName: "selectAllMessages" as const,
-    metadata: null,
+    args: {},
+    metadata: {},
   };
   const startTime = performance.now();
 
