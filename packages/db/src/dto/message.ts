@@ -6,10 +6,14 @@ import { MESSAGE_SENDERS } from "@/schema/constants";
 
 export function createMessageDTO(selectedMessage: SelectedMessage) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { createdAt, updatedAt, deletedAt, ...rest } = selectedMessage;
+  const { deletedAt, sentAt, shownAt, readAt, createdAt, updatedAt, ...rest } =
+    selectedMessage;
 
   return {
     ...rest,
+    sentAt: sentAt.toISOString(),
+    shownAt: shownAt === null ? null : shownAt.toISOString(),
+    readAt: readAt === null ? null : readAt.toISOString(),
     createdAt: createdAt.toISOString(),
     updatedAt: updatedAt.toISOString(),
   };
