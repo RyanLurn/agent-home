@@ -1,6 +1,7 @@
 export type Context<
   TArgs extends Array<unknown>,
   TFunctionName extends string,
+  TMetadata extends Record<string, unknown> | null = null,
 > = {
   args: TArgs;
   functionName: TFunctionName;
@@ -9,27 +10,29 @@ export type Context<
     endTime: number;
     duration: number;
   };
-  [key: string]: unknown;
+  metadata: TMetadata;
 };
 
 export type Failure<
   TError extends Error,
   TArgs extends Array<unknown>,
   TFunctionName extends string,
+  TMetadata extends Record<string, unknown> | null = null,
 > = {
   success: false;
   error: TError;
-  context: Context<TArgs, TFunctionName>;
+  context: Context<TArgs, TFunctionName, TMetadata>;
 };
 
 export type Success<
   TValue,
   TArgs extends Array<unknown>,
   TFunctionName extends string,
+  TMetadata extends Record<string, unknown> | null = null,
 > = {
   success: true;
   value: TValue;
-  context: Context<TArgs, TFunctionName>;
+  context: Context<TArgs, TFunctionName, TMetadata>;
 };
 
 export type Result<
@@ -37,6 +40,7 @@ export type Result<
   TError extends Error,
   TArgs extends Array<unknown>,
   TFunctionName extends string,
+  TMetadata extends Record<string, unknown> | null = null,
 > =
-  | Success<TValue, TArgs, TFunctionName>
-  | Failure<TError, TArgs, TFunctionName>;
+  | Success<TValue, TArgs, TFunctionName, TMetadata>
+  | Failure<TError, TArgs, TFunctionName, TMetadata>;
