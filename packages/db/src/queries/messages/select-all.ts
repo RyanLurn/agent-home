@@ -1,4 +1,5 @@
 import type { Context, Result } from "@repo/core/types/result";
+import type { StrictOmit } from "@repo/core/types/strict-omit";
 
 import {
   createFallbackError,
@@ -15,7 +16,7 @@ import { db } from "@/index";
 export async function selectAllMessages(): Promise<
   Result<MessageDTO[], UnexpectedDatabaseError | FallBackError>
 > {
-  const sharedContext: Omit<Context, "performance"> = {
+  const sharedContext: StrictOmit<Context, "performance"> = {
     functionName: "selectAllMessages" as const,
     args: {},
     metadata: {},
