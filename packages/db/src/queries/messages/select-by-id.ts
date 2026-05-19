@@ -40,12 +40,12 @@ export async function selectMessageById({
       .where(and(eq(messageTable.id, id), isNull(messageTable.deletedAt)));
 
     if (selectedMessage) {
-      const returnedMessage = createMessageDTO(selectedMessage);
+      const messageDTO = createMessageDTO(selectedMessage);
 
       const endTime = performance.now();
       return {
         success: true,
-        value: returnedMessage,
+        value: messageDTO,
         context: {
           ...sharedContext,
           performance: {

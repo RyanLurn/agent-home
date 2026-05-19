@@ -29,14 +29,14 @@ export async function selectAllMessages(): Promise<
       .from(messageTable)
       .where(isNull(messageTable.deletedAt));
 
-    const returnedMessages = selectedMessages.map((message) =>
+    const messageDTOArray = selectedMessages.map((message) =>
       createMessageDTO(message)
     );
 
     const endTime = performance.now();
     return {
       success: true,
-      value: returnedMessages,
+      value: messageDTOArray,
       context: {
         ...sharedContext,
         performance: {
