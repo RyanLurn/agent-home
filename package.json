@@ -11,6 +11,7 @@
     "format": "prettier . --write --cache",
     "format:check": "prettier . --check --cache",
     "check": "turbo run check-types lint && bun run format:check",
+    "core:build": "bun --elide-lines 0 --filter @repo/core build",
     "ui:add": "bun --elide-lines 0 --filter @repo/ui shadcn:add",
     "grab": "bun run scripts/grab/src/index.ts",
     "db:generate": "bun --elide-lines 0 --filter @repo/db generate",
